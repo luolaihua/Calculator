@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_show"
+        android:gravity="right|bottom"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textSize="80sp"
+        android:text="0" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_weight="2"
+        android:layout_height="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp">
+            <TextView
+                android:background="@layout/selector"
+                android:id="@+id/tv_clear"
+                android:textSize="30dp"
+                android:text="C"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/tv_backspace"
+                android:textSize="30dp"
+                android:text="←"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:background="@layout/selector"
+                android:id="@+id/tv_quo_left"
+                android:textSize="30dp"
+                android:text="("
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent" />
+            <TextView
+                android:background="@layout/selector"
+                android:id="@+id/tv_quo_right"
+                android:textSize="30dp"
+                android:text=")"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent" />
+
+
+            android:background="@layout/selector"
+            <TextView
+                android:background="@layout/selector"
+                android:id="@+id/tv_div"
+                android:textSize="30dp"
+                android:text="÷"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp">
+
+            <TextView
+                android:background="@layout/selector"
+                android:id="@+id/tv_7"
+                android:textSize="30dp"
+                android:text="7"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:background="@layout/selector"
+                android:id="@+id/tv_8"
+                android:textSize="30dp"
+                android:text="8"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:background="@layout/selector"
+                android:id="@+id/tv_9"
+                android:textSize="30dp"
+                android:text="9"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:background="@layout/selector"
+                android:id="@+id/tv_mult"
+                android:textSize="30dp"
+                android:text="×"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp">
+
+            <TextView
+                android:background="@layout/selector"
+                android:id="@+id/tv_4"
+                android:textSize="30dp"
+                android:text="4"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:background="@layout/selector"
+                android:id="@+id/tv_5"
+                android:textSize="30dp"
+                android:text="5"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tv_6"
+                android:textSize="30dp"
+                android:background="@layout/selector"
+                android:text="6"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tv_sub"
+                android:textSize="40dp"
+                android:text="-"
+                android:background="@layout/selector"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp">
+
+            <TextView
+                android:id="@+id/tv_1"
+                android:textSize="30dp"
+                android:text="1"
+                android:background="@layout/selector"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tv_2"
+                android:textSize="30dp"
+                android:text="2"
+                android:background="@layout/selector"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tv_3"
+                android:textSize="30dp"
+                android:text="3"
+                android:background="@layout/selector"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+
+                android:id="@+id/tv_add"
+                android:textSize="30dp"
+                android:text="+"
+                android:background="@layout/selector"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp">
+
+
+            <TextView
+                android:id="@+id/tv_zero"
+                android:textSize="30dp"
+                android:background="@layout/selector"
+                android:text="0"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tv_point"
+                android:textSize="50dp"
+                android:text="."
+                android:background="@layout/selector"
+                android:gravity="center|top"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/tv_equal"
+                android:textSize="40dp"
+                android:text="="
+                android:background="@layout/selector"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout> 
