@@ -899,7 +899,7 @@ public class Test extends Activity implements View.OnClickListener{
     }
 
 
-    
+
     //动态显示结果
     public void setShowSize(StringBuilder show) {
         if (show.length()<9) {
