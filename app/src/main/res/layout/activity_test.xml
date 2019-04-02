@@ -16,7 +16,6 @@
             android:background="@layout/selector"
             android:gravity="center"
             android:text="标准"
-
             android:textSize="20dip" />
 
         <TextView

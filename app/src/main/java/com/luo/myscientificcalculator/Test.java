@@ -217,9 +217,11 @@ public class Test extends Activity implements View.OnClickListener{
                      * float fromYDelta 动画开始的点离当前View Y坐标上的差值
                      * float toYDelta 动画开始的点离当前View Y坐标上的差值
                      **/
+                   // Toast.makeText(Test.this,"0000000.", Toast.LENGTH_SHORT).show();
 
                     break;
                 case 1:
+                   // Toast.makeText(Test.this,"1111111", Toast.LENGTH_SHORT).show();
 
                     break;
             }
@@ -362,7 +364,7 @@ public class Test extends Activity implements View.OnClickListener{
 
             case R.id.tv_clear:
                 clear();
-                tv_show.setText(""); setShowSize(sb_show);
+                 setShowSize(sb_show);
                 break;
             case R.id.tv_backspace:
 
@@ -433,234 +435,128 @@ public class Test extends Activity implements View.OnClickListener{
  */
 
             case R.id.tv_zero_pro:
-                if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";
-                    operator = "";
-                }
+                if (flag_result_pro == 1) { clear_pro(); }
 
                 flag_pro = "num";
                 index_flag++;all_flag_pro[index_flag] = flag_pro;
 
                 tv_show_pro.setText(sb_show_pro.append("0"));
-                sb_result_pro.append("0");
+                sb_result_pro.append("0");setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_1_pro:
-                if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
-                }
+                if (flag_result_pro == 1) { clear_pro(); }
+
                 flag_pro = "num"; index_flag++;all_flag_pro[index_flag] = flag_pro;
                 sb_result_pro.append("1");
-                tv_show_pro.setText(sb_show_pro.append("1"));
+                tv_show_pro.setText(sb_show_pro.append("1"));setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_2_pro:
-                if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
-                }
+                if (flag_result_pro == 1) { clear_pro(); }
                 flag_pro = "num"; index_flag++;all_flag_pro[index_flag] = flag_pro;
                 sb_result_pro.append("2");
-                tv_show_pro.setText(sb_show_pro.append("2"));
+                tv_show_pro.setText(sb_show_pro.append("2"));setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_3_pro:
-
-                if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
-                }
+                if (flag_result_pro == 1) { clear_pro(); }
 
 
                 flag_pro = "num"; index_flag++;all_flag_pro[index_flag] = flag_pro;
                 sb_result_pro.append("3");
-                tv_show_pro.setText(sb_show_pro.append("3"));
+                tv_show_pro.setText(sb_show_pro.append("3"));setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_4_pro:
-
-                if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
-                }
+                if (flag_result_pro == 1) { clear_pro(); }
                 flag_pro = "num"; index_flag++;all_flag_pro[index_flag] = flag_pro;
                 sb_result_pro.append("4");
-                tv_show_pro.setText(sb_show_pro.append("4"));
+                tv_show_pro.setText(sb_show_pro.append("4"));setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_5_pro:
-
-                if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
-                }
+                if (flag_result_pro == 1) { clear_pro(); }
                 flag_pro = "num"; index_flag++;all_flag_pro[index_flag] = flag_pro;
                 sb_result_pro.append("5");
-                tv_show_pro.setText(sb_show_pro.append("5"));
+                tv_show_pro.setText(sb_show_pro.append("5"));setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_6_pro:
-
-                if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
-                }flag_pro = "num";index_flag++;all_flag_pro[index_flag] = flag_pro;
+                if (flag_result_pro == 1) { clear_pro(); }
+                flag_pro = "num";index_flag++;all_flag_pro[index_flag] = flag_pro;
                 sb_result_pro.append("6");
-                tv_show_pro.setText(sb_show_pro.append("6"));
+                tv_show_pro.setText(sb_show_pro.append("6"));setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_7_pro:
-
-                if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
-                } flag_pro = "num";index_flag++;all_flag_pro[index_flag] = flag_pro;
+                if (flag_result_pro == 1) { clear_pro(); }
+                flag_pro = "num";index_flag++;all_flag_pro[index_flag] = flag_pro;
                 sb_result_pro.append("7");
-                tv_show_pro.setText(sb_show_pro.append("7"));
+                tv_show_pro.setText(sb_show_pro.append("7"));setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_8_pro:
-
-                if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
-                }flag_pro = "num";index_flag++;all_flag_pro[index_flag] = flag_pro;
+                if (flag_result_pro == 1) { clear_pro(); }
+                flag_pro = "num";index_flag++;all_flag_pro[index_flag] = flag_pro;
                 sb_result_pro.append("8");
-                tv_show_pro.setText(sb_show_pro.append("8"));
+                tv_show_pro.setText(sb_show_pro.append("8"));setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_9_pro:
-
-                if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
-                } flag_pro = "num";index_flag++;all_flag_pro[index_flag] = flag_pro;
+                if (flag_result_pro == 1) { clear_pro(); }
+                flag_pro = "num";index_flag++;all_flag_pro[index_flag] = flag_pro;
                 sb_result_pro.append("9");
-                tv_show_pro.setText(sb_show_pro.append("9"));
+                tv_show_pro.setText(sb_show_pro.append("9"));setShowSize_pro(sb_show_pro);
                 break;
 
 
-
+/**
+ * *******************************************************************
+ */
 
 
             case R.id.tv_add_pro:
-
-                if(index_flag == -1){
-                    index_flag++; all_flag_pro[index_flag] = "num";
-                    sb_result_pro.append("0");
-                    sb_show_pro.append("0");
-                }
+                ifNullAddZero_pro();
 
                 flag_result_pro = 0;
                 MyJeval.getOperator(sb_result_pro,"+",all_flag_pro[index_flag]);
                 MyJeval.getOperator(sb_show_pro,"+",all_flag_pro[index_flag]);
                 tv_show_pro.setText(sb_show_pro);
                 flag_pro = "+";index_flag++;all_flag_pro[index_flag] = flag_pro;
-                operator = "+";index_op++;all_op_pro[index_op] = operator;
+                operator = "+";index_op++;all_op_pro[index_op] = operator;setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_sub_pro:
-                if(index_flag == -1){
-                    index_flag++; all_flag_pro[index_flag] = "num";
-                    sb_result_pro.append("0");
-                    sb_show_pro.append("0");
-                }
+                ifNullAddZero_pro();
                 flag_result_pro = 0;
                 MyJeval.getOperator(sb_result_pro,"-",all_flag_pro[index_flag]);
                 MyJeval.getOperator(sb_show_pro,"-",all_flag_pro[index_flag]);
                 tv_show_pro.setText(sb_show_pro);
                 flag_pro = "-"; operator = "-";
+                index_flag++;all_flag_pro[index_flag] = flag_pro;
+                index_op++;all_op_pro[index_op] = operator;setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_mult_pro:
-                if(index_flag == -1){
-                    index_flag++; all_flag_pro[index_flag] = "num";
-                    sb_result_pro.append("0");
-                    sb_show_pro.append("0");
-                }
+                ifNullAddZero_pro();
                 flag_result_pro = 0;
                 MyJeval.getOperator(sb_result_pro,"*",all_flag_pro[index_flag]);
                 MyJeval.getOperator(sb_show_pro,"*",all_flag_pro[index_flag]);
                 tv_show_pro.setText(sb_show_pro);
                 flag_pro = "*"; index_flag++;all_flag_pro[index_flag] = flag_pro;
-                operator = "*";index_op++;all_op_pro[index_op] = operator;
+                operator = "*";index_op++;all_op_pro[index_op] = operator;setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_div_pro:
-                if(index_flag == -1){
-                    index_flag++; all_flag_pro[index_flag] = "num";
-                    sb_result_pro.append("0");
-                    sb_show_pro.append("0");
-                }
+                ifNullAddZero_pro();
                 flag_result_pro = 0;
                 MyJeval.getOperator(sb_result_pro,"/",all_flag_pro[index_flag]);
                 MyJeval.getOperator(sb_show_pro,"/",all_flag_pro[index_flag]);
                 tv_show_pro.setText(sb_show_pro);
                 flag_pro = "/"; index_flag++;all_flag_pro[index_flag] = flag_pro;
-                operator = "/";index_op++;all_op_pro[index_op] = operator;
+                operator = "/";index_op++;all_op_pro[index_op] = operator;setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_point_pro:
-                if(index_flag == -1){
-                    index_flag++; all_flag_pro[index_flag] = "num";
-                    sb_result_pro.append("0");
-                    sb_show_pro.append("0");
-                }
+                ifNullAddZero_pro();
 
 
                 flag_pro = "num"; operator = ".";
                 flag_result_pro = 0;
                 sb_result_pro.append(".");
-                tv_show_pro.setText(sb_show_pro.append("."));
+                tv_show_pro.setText(sb_show_pro.append("."));setShowSize_pro(sb_show_pro);
                 break;
 
             case R.id.tv_clear_pro:
-                tv_show_pro.setText("");
-                sb_show_pro = new StringBuilder();
-                sb_result_pro = new StringBuilder();
-                flag_kuo_left_pro = 0;
-                flag_kuo_right_pro = 0;
-                flag_result_pro = 0;
-                flag_pro = ""; operator = "";
+               clear_pro();setShowSize_pro(sb_show_pro);
                 break;
 
                 //TODO  有缺陷---试着把flag变成数组
@@ -690,9 +586,9 @@ public class Test extends Activity implements View.OnClickListener{
                     flag_result_pro = 0;
 
 
-                    operator = "";flag_pro = "";
+                    operator = all_op_pro[index_op];flag_pro = all_flag_pro[index_flag];
                 }
-
+                setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_equal_pro:
                 try {
@@ -703,6 +599,7 @@ public class Test extends Activity implements View.OnClickListener{
 
                     }
                     result_pro = evaluator_pro.evaluate(sb_result_pro.toString());
+                    result_pro = resultToInt(result_pro);
                     tv_show_pro.setText(result_pro);
                     sb_result_pro = new StringBuilder();
                     sb_show_pro = new StringBuilder();
@@ -717,6 +614,7 @@ public class Test extends Activity implements View.OnClickListener{
                     for (int i = 0; i < sb_result_pro.length(); i++) {
                         index_flag++;all_flag_pro[index_flag] = flag_pro;
                     }
+                    setShowSize_pro(sb_show_pro);
 
                 } catch (EvaluationException ee) {
                     Toast.makeText(Test.this,"输入有误...", Toast.LENGTH_SHORT).show();
@@ -729,43 +627,29 @@ public class Test extends Activity implements View.OnClickListener{
                 sb_result_pro.append("(");
                 flag_result_pro = 0;
                 flag_kuo_left_pro++;
-
+                setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_quo_right_pro:
                 flag_pro = ")";operator = ")";
                 tv_show_pro.setText(sb_show_pro.append(")"));
                 sb_result_pro.append(")");
                 flag_result_pro = 0;
-                flag_kuo_right_pro++;
+                flag_kuo_right_pro++;setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_pi:
-                if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
-                }
+                if (flag_result_pro == 1) { clear_pro(); }
                 flag_pro = "num";
                 tv_show_pro.setText(sb_show_pro.append("π"));
-                sb_result_pro.append(PPP);
+                sb_result_pro.append(PPP);setShowSize_pro(sb_show_pro);
                 break;
 
             case R.id.tv_e:
                 if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
+                   clear_pro();
                 }
                 flag_pro = "num";
                 tv_show_pro.setText(sb_show_pro.append("e"));
-                sb_result_pro.append(EEE);
+                sb_result_pro.append(EEE);setShowSize_pro(sb_show_pro);
                 break;
 
 
@@ -775,87 +659,57 @@ public class Test extends Activity implements View.OnClickListener{
                 break;
             case R.id.tv_tan:
                 if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
+                   clear_pro();
                 }
                 flag_pro = "(";
                 tv_show_pro.setText(sb_show_pro.append("tan("));
                 sb_result_pro.append("tan(");
-                flag_kuo_left_pro++;
+                flag_kuo_left_pro++;setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_sin:
                 if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
+                   clear_pro();
                 }
                 flag_pro = "(";
                 tv_show_pro.setText(sb_show_pro.append("sin("));
                 sb_result_pro.append("sin(");
-                flag_kuo_left_pro++;
+                flag_kuo_left_pro++;setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_cos:
                 if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
+                   clear_pro();
                 }
                 flag_pro = "(";
                 tv_show_pro.setText(sb_show_pro.append("cos("));
                 sb_result_pro.append("cos(");
-                flag_kuo_left_pro++;
+                flag_kuo_left_pro++;setShowSize_pro(sb_show_pro);
                 break;
 
             case R.id.tv_ln:
                 if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
+                    clear_pro();
                 }
                 flag_pro = "(";
                 tv_show_pro.setText(sb_show_pro.append("log("));
                 sb_result_pro.append("log(");
-                flag_kuo_left_pro++;
+                flag_kuo_left_pro++;setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_sqrt:
                 if (flag_result_pro == 1) {
-                    tv_show_pro.setText("");
-                    sb_show_pro = new StringBuilder();
-                    sb_result_pro = new StringBuilder();
-                    flag_kuo_left_pro = 0;
-                    flag_kuo_right_pro = 0;
-                    flag_result_pro = 0;
-                    flag_pro = "";operator = "";
+                    clear_pro();
                 }
                 flag_pro = "(";
                 tv_show_pro.setText(sb_show_pro.append("sqrt("));
                 sb_result_pro.append("sqrt(");
-                flag_kuo_left_pro++;
+                flag_kuo_left_pro++;setShowSize_pro(sb_show_pro);
                 break;
                 //TODO
             case R.id.tv_pow:
                 flag_result_pro = 0;
-                MyJeval.pow2(sb_result_pro,all_op_pro[index_op],all_flag_pro[index_flag],flag_kuo_left_pro,flag_kuo_right_pro);
-                MyJeval.pow2(sb_show_pro,all_op_pro[index_op],all_flag_pro[index_flag],flag_kuo_left_pro,flag_kuo_right_pro);
+                MyJeval.pow2(sb_result_pro,operator,flag_pro,flag_kuo_left_pro,flag_kuo_right_pro);
+                MyJeval.pow2(sb_show_pro,operator,flag_pro,flag_kuo_left_pro,flag_kuo_right_pro);
                 tv_show_pro.setText(sb_show_pro);
-                flag_kuo_left_pro++;
+                flag_kuo_left_pro++;setShowSize_pro(sb_show_pro);
                 break;
             case R.id.tv_ping:
 
@@ -864,7 +718,7 @@ public class Test extends Activity implements View.OnClickListener{
                 MyJeval.pow2(sb_show_pro,operator,flag_pro,flag_kuo_left_pro,flag_kuo_right_pro);
                 sb_result_pro.append("2)");
                 sb_show_pro.append("2)");
-                tv_show_pro.setText(sb_show_pro);
+                tv_show_pro.setText(sb_show_pro);setShowSize_pro(sb_show_pro);
                 //sb_result_pro.append("pow(");
                 break;
 
@@ -882,6 +736,7 @@ public class Test extends Activity implements View.OnClickListener{
     }
     public void ifNullAddZero(){
         if(index == -1){
+            tv_show.setText("");
             index++; all_op[index] = "num";
             sb_result.append("0");
             sb_show.append("0");
@@ -910,6 +765,33 @@ public class Test extends Activity implements View.OnClickListener{
             tv_show.setTextSize(40);
         }else {
             tv_show.setTextSize(30);
+        }
+    }
+    public void setShowSize_pro(StringBuilder show) {
+        if (show.length()<9) {
+            tv_show_pro.setTextSize(80);
+        }else if(show.length()<11){
+            tv_show_pro.setTextSize(60);
+        }else if(show.length()<16){
+            tv_show_pro.setTextSize(40);
+        }else {
+            tv_show_pro.setTextSize(30);
+        }
+    }
+    public void clear_pro(){
+        tv_show_pro.setText("");
+        sb_show_pro = new StringBuilder();
+        sb_result_pro = new StringBuilder();
+        flag_kuo_left_pro = 0;
+        flag_kuo_right_pro = 0;
+        flag_result_pro = 0;
+        flag_pro = "";operator = "";
+    }
+    public void ifNullAddZero_pro(){
+        if(index_flag == -1){
+            index_flag++; all_flag_pro[index_flag] = "num";
+            sb_result_pro.append("0");
+            sb_show_pro.append("0");
         }
     }
 }
