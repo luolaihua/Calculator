@@ -1,6 +1,8 @@
 package com.luo.myscientificcalculator;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -18,6 +20,8 @@ import java.util.ArrayList;
 
 public class Test extends Activity implements View.OnClickListener{
 
+    private SharedPreferences.Editor editor;
+
     private ViewPager viewPager;
     private ArrayList<View> pageview;
     private TextView simpleLayout;
@@ -29,7 +33,7 @@ public class Test extends Activity implements View.OnClickListener{
     private TextView tv_1_pro,tv_2_pro,tv_3_pro,tv_4_pro,tv_5_pro,tv_6_pro,tv_7_pro,tv_8_pro,tv_9_pro,tv_0_pro,
             tv_show_pro, tv_point_pro,tv_add_pro,tv_sub_pro,tv_div_pro, tv_mult_pro,
             tv_clear_pro,tv_backspace_pro,tv_equal_pro,tv_kuo_left_pro,tv_kuo_right_pro,tv_pi,tv_e,tv_sin,tv_cos,tv_tan,tv_ln,tv_lg,tv_sqrt,
-            tv_pow,tv_ping;
+            tv_pow,tv_ping,tv_hitory;
     private static StringBuilder sb_show ,sb_result;
     private static int flag_kuo_left = 0,flag_kuo_right = 0,flag_result=0,flag_operator = 0;
     private Evaluator evaluator = new Evaluator();
@@ -39,6 +43,7 @@ public class Test extends Activity implements View.OnClickListener{
     private static String flag_show = "";
     private static String [] all_op = new String[100];
     private static int index = -1;
+    private  String simple_history_str = "";
 
 
 
@@ -128,6 +133,7 @@ public class Test extends Activity implements View.OnClickListener{
         tv_kuo_right = (TextView) view1.findViewById(R.id.tv_quo_right);
         tv_clear = (TextView) view1.findViewById(R.id.tv_clear);
         tv_show = (TextView) view1.findViewById(R.id.tv_show);
+        tv_hitory = (TextView) view1.findViewById(R.id.tv_history);
 
 
 
@@ -187,6 +193,7 @@ public class Test extends Activity implements View.OnClickListener{
         tv_kuo_right.setOnClickListener(this);
         tv_backspace.setOnClickListener(this);
         tv_equal.setOnClickListener(this);
+        tv_hitory.setOnClickListener(this);
 
 
 
@@ -256,6 +263,7 @@ public class Test extends Activity implements View.OnClickListener{
             case R.id.tv_zero:
                 //是否进行过计算，然后初始化
                 if (flag_result == 1) { clear(); }
+
                 flag = "num";index++;all_op[index] = flag;
                 tv_show.setText(sb_show.append("0"));
                 sb_result.append("0");
@@ -342,14 +350,14 @@ public class Test extends Activity implements View.OnClickListener{
             case R.id.tv_mult:
                ifNullAddZero();
                 MyJeval.getOperator(sb_result,"*",all_op[index]);
-                MyJeval.getOperator(sb_show,"*",all_op[index]);tv_show.setText(sb_show);
+                MyJeval.getOperator(sb_show,"×",all_op[index]);tv_show.setText(sb_show);
                 flag = "*";
                 index++; all_op[index] = flag;flag_result = 0; setShowSize(sb_show);
                 break;
             case R.id.tv_div:
                 ifNullAddZero();
                 MyJeval.getOperator(sb_result,"/",all_op[index]);
-                MyJeval.getOperator(sb_show,"/",all_op[index]);tv_show.setText(sb_show);
+                MyJeval.getOperator(sb_show,"÷",all_op[index]);tv_show.setText(sb_show);
                 flag = "/";
                 index++;all_op[index] = flag;
                 flag_result = 0; setShowSize(sb_show);
@@ -394,6 +402,9 @@ public class Test extends Activity implements View.OnClickListener{
 
                     }
                     result = evaluator.evaluate(sb_result.toString());
+
+                    simple_history_str +=  sb_show.toString()+"#";
+
                     result = resultToInt(result);
                     tv_show.setText(result);
                     sb_result = new StringBuilder();
@@ -425,6 +436,13 @@ public class Test extends Activity implements View.OnClickListener{
                 flag_result = 0;
                 flag_kuo_right++; setShowSize(sb_show);
                 break;
+            case R.id.tv_history:
+                editor = getSharedPreferences("simple_history",MODE_PRIVATE).edit();
+                editor.putString("str_history",simple_history_str);
+                editor.apply();
+                Intent intent = new Intent(Test.this,simple_history.class);
+                startActivity(intent);
+                //Toast.makeText(Test.this,simple_history_str, Toast.LENGTH_LONG).show();
 
 
 
@@ -733,6 +751,7 @@ public class Test extends Activity implements View.OnClickListener{
         flag = "";
         all_op = new String[100];
         index = -1;
+        tv_show.setText("");
     }
     public void ifNullAddZero(){
         if(index == -1){
@@ -752,9 +771,6 @@ public class Test extends Activity implements View.OnClickListener{
         }
         return String.valueOf(number2);
     }
-
-
-
     //动态显示结果
     public void setShowSize(StringBuilder show) {
         if (show.length()<9) {
@@ -793,5 +809,9 @@ public class Test extends Activity implements View.OnClickListener{
             sb_result_pro.append("0");
             sb_show_pro.append("0");
         }
+    }
+
+    public void setTv_show(String flag){
+
     }
 }

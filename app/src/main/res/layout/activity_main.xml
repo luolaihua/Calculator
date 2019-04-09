@@ -3,7 +3,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <TextView
         android:id="@+id/tv_show"
         android:gravity="right|bottom"
@@ -12,6 +11,16 @@
         android:layout_weight="1"
         android:textSize="80dp"
         android:text="0" />
+
+    <TextView
+        android:id="@+id/tv_history"
+        android:gravity="left|bottom"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+
+        android:text="历史记录" />
+
 
     <LinearLayout
         android:orientation="vertical"
