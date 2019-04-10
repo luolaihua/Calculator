@@ -1,48 +1,57 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"  >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="50.0dip">
-
-        <!--layout_weight这个属性为权重，让两个textview平分这个linearLayout-->
-        <TextView
-            android:id="@+id/simpleLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:background="@layout/selector"
-            android:gravity="center"
-            android:text="标准"
-            android:textSize="20dip" />
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:background="#FFFFFF">
 
         <TextView
-            android:id="@+id/scientificLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/tv_one"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_weight="1.0"
-            android:background="@layout/selector"
             android:gravity="center"
-            android:text="科学"
-            android:textSize="20dip" />
+            android:text="橘黄"
+            android:textColor="#000000" />
 
+        <TextView
+            android:id="@+id/tv_two"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="淡黄"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/tv_three"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="浅棕"
+            android:textColor="#000000" />
     </LinearLayout>
-<!--
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_below="@id/linearLayout"
-        android:id="@+id/scrollbar"
-        android:scaleType="matrix"
-        android:src="@drawable/p"/>
-  -->
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/linearLayout">
-    </android.support.v4.view.ViewPager>
 
-</RelativeLayout>
+    <ImageView
+        android:id="@+id/img_cursor"
+        android:layout_width="fill_parent"
+        android:layout_height="5dp"
+        android:scaleType="matrix"
+        android:src="@drawable/menu" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpager_four"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1.0"
+        android:flipInterval="30"
+        android:persistentDrawingCache="animation" />
+
+</LinearLayout>

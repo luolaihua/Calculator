@@ -3,13 +3,19 @@ package com.luo.myscientificcalculator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,14 +24,21 @@ import net.sourceforge.jeval.Evaluator;
 
 import java.util.ArrayList;
 
-public class Test extends Activity implements View.OnClickListener{
+public class Test extends Activity implements View.OnClickListener,ViewPager.OnPageChangeListener{
 
     private SharedPreferences.Editor editor;
+    private ViewPager vpager_four;
+    private ImageView img_cursor;
+    private TextView tv_one;
+    private TextView tv_two;
+    private TextView tv_three;
 
-    private ViewPager viewPager;
-    private ArrayList<View> pageview;
-    private TextView simpleLayout;
-    private TextView scientificLayout;
+    private ArrayList<View> listViews;
+    private int offset = 0;//移动条图片的偏移量
+    private int currIndex = 0;//当前页面的编号
+    private int bmpWidth;// 移动条图片的长度
+    private int one = 0; //移动条滑动一页的距离
+    private int two = 0; //滑动条移动两页的距离
 
 
     private TextView tv_1,tv_2,tv_3,tv_4,tv_5,tv_6,tv_7,tv_8,tv_9,tv_0,tv_show,
@@ -65,50 +78,45 @@ public class Test extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        simpleLayout = (TextView)findViewById(R.id.simpleLayout);
-        scientificLayout = (TextView)findViewById(R.id.scientificLayout);
-        simpleLayout.setOnClickListener(this);
-        scientificLayout.setOnClickListener(this);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        vpager_four = (ViewPager) findViewById(R.id.vpager_four);
+        tv_one = (TextView) findViewById(R.id.tv_one);
+        tv_two = (TextView) findViewById(R.id.tv_two);
+        tv_three = (TextView) findViewById(R.id.tv_three);
+        img_cursor = (ImageView) findViewById(R.id.img_cursor);
+
+        //下划线动画的相关设置：
+        bmpWidth = BitmapFactory.decodeResource(getResources(), R.drawable.menu).getWidth();// 获取图片宽度
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int screenW = dm.widthPixels;// 获取分辨率宽度
+        offset = (screenW / 3 - bmpWidth) / 2;// 计算偏移量
+        Matrix matrix = new Matrix();
+        matrix.postTranslate(offset, 0);
+        img_cursor.setImageMatrix(matrix);// 设置动画初始位置
+        //移动的距离
+        one = offset * 2 + bmpWidth;// 移动一页的偏移量,比如1->2,或者2->3
+        two = one * 2;// 移动两页的偏移量,比如1直接跳3
         //查找布局文件用LayoutInflater.inflate
         LayoutInflater inflater =getLayoutInflater();
-        View view1 = inflater.inflate(R.layout.activity_main, null);
+        View view1 = inflater.inflate(R.layout.simple, null);
         View view2 = inflater.inflate(R.layout.scientific, null);
-        pageview =new ArrayList<View>();
+        View view3 = inflater.inflate(R.layout.matrix, null);
+        listViews = new ArrayList<View>();
         //添加想要切换的界面
-        pageview.add(view1);
-        pageview.add(view2);
-        //数据适配器
-        PagerAdapter mPagerAdapter = new PagerAdapter(){
+        listViews.add(view1);
+        listViews.add(view2);
+        listViews.add(view3);
+        vpager_four.setAdapter(new MyPagerAdapter(listViews));
+        vpager_four.setCurrentItem(0);          //设置ViewPager当前页，从0开始算
 
-            @Override
-            //获取当前窗体界面数
-            public int getCount() {
-                // TODO Auto-generated method stub
-                return pageview.size();
-            }
-            @Override
-            //判断是否由对象生成界面
-            public boolean isViewFromObject(View arg0, Object arg1) {
-                // TODO Auto-generated method stub
-                return arg0==arg1;
-            }
+        tv_one.setOnClickListener(this);
+        tv_two.setOnClickListener(this);
+        tv_three.setOnClickListener(this);
 
-            @NonNull
-            @Override
-            public Object instantiateItem(@NonNull ViewGroup container, int position) {
-                container.addView(pageview.get(position));
-                //每次滑动的时候把视图添加到viewpager
-                return pageview.get(position);
-            }
-        };
-        //绑定适配器
-        viewPager.setAdapter(mPagerAdapter);
-        //设置viewPager的初始界面为第一个界面
-        viewPager.setCurrentItem(0);
+        vpager_four.addOnPageChangeListener(this);
 
-        //添加切换界面的监听器
-        viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+
+
 
         sb_show = new StringBuilder();
         sb_result = new StringBuilder();
@@ -211,50 +219,61 @@ public class Test extends Activity implements View.OnClickListener{
 
     }
 
-    public class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
-
-        @Override
-        public void onPageSelected(int arg0) {
-            switch (arg0) {
-                case 0:
-                    /**
-                     * TranslateAnimation的四个属性分别为
-                     * float fromXDelta 动画开始的点离当前View X坐标上的差值
-                     * float toXDelta 动画结束的点离当前View X坐标上的差值
-                     * float fromYDelta 动画开始的点离当前View Y坐标上的差值
-                     * float toYDelta 动画开始的点离当前View Y坐标上的差值
-                     **/
-                   // Toast.makeText(Test.this,"0000000.", Toast.LENGTH_SHORT).show();
-
-                    break;
-                case 1:
-                   // Toast.makeText(Test.this,"1111111", Toast.LENGTH_SHORT).show();
-
-                    break;
-            }
-
+    @Override
+    public void onPageSelected(int index) {
+        Animation animation = null;
+        switch (index) {
+            case 0:
+                if (currIndex == 1) {
+                    animation = new TranslateAnimation(one, 0, 0, 0);
+                } else if (currIndex == 2) {
+                    animation = new TranslateAnimation(two, 0, 0, 0);
+                }
+                break;
+            case 1:
+                if (currIndex == 0) {
+                    animation = new TranslateAnimation(offset, one, 0, 0);
+                } else if (currIndex == 2) {
+                    animation = new TranslateAnimation(two, one, 0, 0);
+                }
+                break;
+            case 2:
+                if (currIndex == 0) {
+                    animation = new TranslateAnimation(offset, two, 0, 0);
+                } else if (currIndex == 1) {
+                    animation = new TranslateAnimation(one, two, 0, 0);
+                }
+                break;
         }
-
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int arg0) {
-        }
+        currIndex = index;
+        animation.setFillAfter(true);// true表示图片停在动画结束位置
+        animation.setDuration(300); //设置动画时间为300毫秒
+        img_cursor.startAnimation(animation);//开始动画
     }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
+
+    }
+
+    @Override
+    public void onPageScrolled(int i, float v, int i1) {
+
+    }
+
 
     @Override
     public void onClick(View view){
 
         switch (view.getId()){
-            case R.id.simpleLayout:
-                //切换到第一页
-                viewPager.setCurrentItem(0);
+            case R.id.tv_one:
+                vpager_four.setCurrentItem(0);
                 break;
-            case R.id.scientificLayout:
-                //切换的第二页
-                viewPager.setCurrentItem(1);
+            case R.id.tv_two:
+                vpager_four.setCurrentItem(1);
+                break;
+            case R.id.tv_three:
+                vpager_four.setCurrentItem(2);
                 break;
 
 
