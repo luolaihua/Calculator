@@ -6,13 +6,10 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -27,11 +24,11 @@ import java.util.ArrayList;
 public class Test extends Activity implements View.OnClickListener,ViewPager.OnPageChangeListener{
 
     private SharedPreferences.Editor editor;
-    private ViewPager vpager_four;
+    private ViewPager viewPager;
     private ImageView img_cursor;
-    private TextView tv_one;
-    private TextView tv_two;
-    private TextView tv_three;
+    private TextView tv_simple;
+    private TextView tv_scientific;
+    private TextView tv_matrix;
 
     private ArrayList<View> listViews;
     private int offset = 0;//移动条图片的偏移量
@@ -39,6 +36,8 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
     private int bmpWidth;// 移动条图片的长度
     private int one = 0; //移动条滑动一页的距离
     private int two = 0; //滑动条移动两页的距离
+
+    private View view1,view2,view3 ;
 
 
     private TextView tv_1,tv_2,tv_3,tv_4,tv_5,tv_6,tv_7,tv_8,tv_9,tv_0,tv_show,
@@ -77,46 +76,8 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-
-        vpager_four = (ViewPager) findViewById(R.id.vpager_four);
-        tv_one = (TextView) findViewById(R.id.tv_one);
-        tv_two = (TextView) findViewById(R.id.tv_two);
-        tv_three = (TextView) findViewById(R.id.tv_three);
-        img_cursor = (ImageView) findViewById(R.id.img_cursor);
-
-        //下划线动画的相关设置：
-        bmpWidth = BitmapFactory.decodeResource(getResources(), R.drawable.menu).getWidth();// 获取图片宽度
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int screenW = dm.widthPixels;// 获取分辨率宽度
-        offset = (screenW / 3 - bmpWidth) / 2;// 计算偏移量
-        Matrix matrix = new Matrix();
-        matrix.postTranslate(offset, 0);
-        img_cursor.setImageMatrix(matrix);// 设置动画初始位置
-        //移动的距离
-        one = offset * 2 + bmpWidth;// 移动一页的偏移量,比如1->2,或者2->3
-        two = one * 2;// 移动两页的偏移量,比如1直接跳3
-        //查找布局文件用LayoutInflater.inflate
-        LayoutInflater inflater =getLayoutInflater();
-        View view1 = inflater.inflate(R.layout.simple, null);
-        View view2 = inflater.inflate(R.layout.scientific, null);
-        View view3 = inflater.inflate(R.layout.matrix, null);
-        listViews = new ArrayList<View>();
-        //添加想要切换的界面
-        listViews.add(view1);
-        listViews.add(view2);
-        listViews.add(view3);
-        vpager_four.setAdapter(new MyPagerAdapter(listViews));
-        vpager_four.setCurrentItem(0);          //设置ViewPager当前页，从0开始算
-
-        tv_one.setOnClickListener(this);
-        tv_two.setOnClickListener(this);
-        tv_three.setOnClickListener(this);
-
-        vpager_four.addOnPageChangeListener(this);
-
-
-
+//chushihu
+        initView();
 
         sb_show = new StringBuilder();
         sb_result = new StringBuilder();
@@ -266,14 +227,14 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
     public void onClick(View view){
 
         switch (view.getId()){
-            case R.id.tv_one:
-                vpager_four.setCurrentItem(0);
+            case R.id.tv_simple:
+                viewPager.setCurrentItem(0);
                 break;
-            case R.id.tv_two:
-                vpager_four.setCurrentItem(1);
+            case R.id.tv_sicentific:
+                viewPager.setCurrentItem(1);
                 break;
-            case R.id.tv_three:
-                vpager_four.setCurrentItem(2);
+            case R.id.tv_matrix:
+                viewPager.setCurrentItem(2);
                 break;
 
 
@@ -831,6 +792,48 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
     }
 
     public void setTv_show(String flag){
+
+    }
+
+    public void initView(){
+
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        tv_simple = (TextView) findViewById(R.id.tv_simple);
+        tv_scientific = (TextView) findViewById(R.id.tv_sicentific);
+        tv_matrix = (TextView) findViewById(R.id.tv_matrix);
+        img_cursor = (ImageView) findViewById(R.id.img_cursor);
+
+        //下划线动画的相关设置：
+        bmpWidth = BitmapFactory.decodeResource(getResources(), R.drawable.m2).getWidth();// 获取图片宽度
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int screenW = dm.widthPixels;// 获取分辨率宽度
+        offset = (screenW / 3 - bmpWidth) / 2;// 计算偏移量
+        Matrix matrix = new Matrix();
+        matrix.postTranslate(offset, 0);
+        img_cursor.setImageMatrix(matrix);// 设置动画初始位置
+        //移动的距离
+        one = offset * 2 + bmpWidth;// 移动一页的偏移量,比如1->2,或者2->3
+        two = one * 2;// 移动两页的偏移量,比如1直接跳3
+        //查找布局文件用LayoutInflater.inflate
+        LayoutInflater inflater =getLayoutInflater();
+        view1 = inflater.inflate(R.layout.simple, null);
+        view2 = inflater.inflate(R.layout.scientific, null);
+        view3 = inflater.inflate(R.layout.matrix, null);
+        listViews = new ArrayList<View>();
+        //添加想要切换的界面
+        listViews.add(view1);
+        listViews.add(view2);
+        listViews.add(view3);
+        viewPager.setAdapter(new MyPagerAdapter(listViews));
+        viewPager.setCurrentItem(0);          //设置ViewPager当前页，从0开始算
+
+        tv_simple.setOnClickListener(this);
+        tv_scientific.setOnClickListener(this);
+        tv_matrix.setOnClickListener(this);
+
+        viewPager.addOnPageChangeListener(this);
+
 
     }
 }

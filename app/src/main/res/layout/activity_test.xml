@@ -7,51 +7,50 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="48dp"
-        android:background="#FFFFFF">
+        android:layout_height="48dp">
 
         <TextView
-            android:id="@+id/tv_one"
+            android:background="@layout/selector"
+            android:id="@+id/tv_simple"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1.0"
             android:gravity="center"
-            android:text="橘黄"
-            android:textColor="#000000" />
+            android:text="简单" />
 
         <TextView
-            android:id="@+id/tv_two"
+            android:background="@layout/selector"
+            android:id="@+id/tv_sicentific"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1.0"
             android:gravity="center"
-            android:text="淡黄"
-            android:textColor="#000000" />
+            android:text="科学" />
 
         <TextView
-            android:id="@+id/tv_three"
+            android:background="@layout/selector"
+            android:id="@+id/tv_matrix"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1.0"
             android:gravity="center"
-            android:text="浅棕"
-            android:textColor="#000000" />
+            android:text="矩阵" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/img_cursor"
         android:layout_width="fill_parent"
-        android:layout_height="5dp"
+        android:layout_height="2dp"
         android:scaleType="matrix"
-        android:src="@drawable/menu" />
+        android:src="@drawable/m2" />
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/vpager_four"
+        android:id="@+id/viewPager"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_weight="1.0"
         android:flipInterval="30"
-        android:persistentDrawingCache="animation" />
+        android:persistentDrawingCache="animation|scrolling" />
 
 </LinearLayout>
