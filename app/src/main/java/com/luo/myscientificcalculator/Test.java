@@ -6,13 +6,18 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +25,7 @@ import net.sourceforge.jeval.EvaluationException;
 import net.sourceforge.jeval.Evaluator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Test extends Activity implements View.OnClickListener,ViewPager.OnPageChangeListener{
 
@@ -72,12 +78,230 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
     private static int index_op = -1;
     private static int index_flag = -1;
 
+
+    //下拉栏
+    private Spinner spinner_row_a, spinner_column_a,spinner_row_b, spinner_column_b;
+
+    private TextView tv_result,tv_equal_ma,tv_add_ma,tv_sub_ma,tv_mult_ma,tv_sovle,tv_sovleTran,tv_clearAll,
+            tv_A ,tv_B ,tv_analysisA,tv_analysisB;
+    private EditText et_a,et_b,et_inputA,et_inputB;
+    private String input_a,input_b;
+    private List<String> row_a = new ArrayList<>();
+    private List<String> column_a = new ArrayList<>();
+    private List<String> row_b = new ArrayList<>();
+    private List<String> column_b = new ArrayList<>();
+    private static int num_row_a=1,num_row_b=1,num_column_a=1,num_column_b=1;//a b行列的数量
+    private  int flag_ma = 0;                                                  //加减乘除的flag
+    private double[][] result_ma,m,n,eigD,eigV,inverse,transpose;              // 结果
+    private double rank,det;                                                //秩和行列式
+    private static int num = 3;                                              //小数点保留位数
+    private static boolean which_mode = false;                              //是否手动输入模式
+    private static boolean isVibrate = false;                               //是否触摸反馈
+
+    //输入框的id
+    private LinearLayout linear_a1,linear_a2,linear_a3,linear_a4,linear_a5,
+            linear_b1,linear_b2,linear_b3,linear_b4,linear_b5,linear_a,linear_b;
+    static double id_a[][] = new double[5][5];
+    static double id_b[][] = new double[5][5];
+    static double data_a[][] = new double[5][5];
+    static double data_b[][] = new double[5][5];
+    Vibrator vibrator;
+
+
+    private DrawerLayout drawerLayout;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-//chushihu
+         //初始化
         initView();
+
+
+    }
+
+    @Override
+    public void onClick(View view){
+        computeSimple(view.getId());
+        computeScientific(view.getId());
+
+
+        switch (view.getId()){
+            case R.id.tv_simple:
+                viewPager.setCurrentItem(0);
+                break;
+            case R.id.tv_sicentific:
+                viewPager.setCurrentItem(1);
+                break;
+            case R.id.tv_matrix:
+                viewPager.setCurrentItem(2);
+                break;
+
+        }
+    }
+
+
+
+
+
+
+
+    @Override
+    public void onPageSelected(int index) {
+        Animation animation = null;
+        switch (index) {
+            case 0:
+                if (currIndex == 1) {
+                    animation = new TranslateAnimation(one, 0, 0, 0);
+                } else if (currIndex == 2) {
+                    animation = new TranslateAnimation(two, 0, 0, 0);
+                }
+                break;
+            case 1:
+                if (currIndex == 0) {
+                    animation = new TranslateAnimation(offset, one, 0, 0);
+                } else if (currIndex == 2) {
+                    animation = new TranslateAnimation(two, one, 0, 0);
+                }
+                break;
+            case 2:
+                if (currIndex == 0) {
+                    animation = new TranslateAnimation(offset, two, 0, 0);
+                } else if (currIndex == 1) {
+                    animation = new TranslateAnimation(one, two, 0, 0);
+                }
+                break;
+        }
+        currIndex = index;
+        animation.setFillAfter(true);// true表示图片停在动画结束位置
+        animation.setDuration(300); //设置动画时间为300毫秒
+        img_cursor.startAnimation(animation);//开始动画
+    }
+    @Override
+    public void onPageScrollStateChanged(int i) { }
+    @Override
+    public void onPageScrolled(int i, float v, int i1) { }
+
+
+
+    public void clear(){
+        sb_show = new StringBuilder();
+        sb_result = new StringBuilder();
+        flag_kuo_left = 0;
+        flag_kuo_right = 0;
+        flag_result = 0;
+        flag = "";
+        all_op = new String[100];
+        index = -1;
+        tv_show.setText("");
+    }
+    public void ifNullAddZero(){
+        if(index == -1){
+            tv_show.setText("");
+            index++; all_op[index] = "num";
+            sb_result.append("0");
+            sb_show.append("0");
+        }
+    }
+    //如果结果是整数则取整
+    public String resultToInt(String num){
+
+
+        double number2 = Double.parseDouble(num);//類型轉換
+        if(Math.round(number2)-number2 == 0){
+            return String.valueOf((long)number2);
+        }
+        return String.valueOf(number2);
+    }
+    //动态显示结果
+    public void setShowSize(StringBuilder show) {
+        if (show.length()<9) {
+            tv_show.setTextSize(80);
+        }else if(show.length()<11){
+            tv_show.setTextSize(60);
+        }else if(show.length()<16){
+            tv_show.setTextSize(40);
+        }else {
+            tv_show.setTextSize(30);
+        }
+    }
+    public void setShowSize_pro(StringBuilder show) {
+        if (show.length()<9) {
+            tv_show_pro.setTextSize(80);
+        }else if(show.length()<11){
+            tv_show_pro.setTextSize(60);
+        }else if(show.length()<16){
+            tv_show_pro.setTextSize(40);
+        }else {
+            tv_show_pro.setTextSize(30);
+        }
+    }
+    public void clear_pro(){
+        tv_show_pro.setText("");
+        sb_show_pro = new StringBuilder();
+        sb_result_pro = new StringBuilder();
+        flag_kuo_left_pro = 0;
+        flag_kuo_right_pro = 0;
+        flag_result_pro = 0;
+        flag_pro = "";operator = "";
+    }
+    public void ifNullAddZero_pro(){
+        if(index_flag == -1){
+            index_flag++; all_flag_pro[index_flag] = "num";
+            sb_result_pro.append("0");
+            sb_show_pro.append("0");
+        }
+    }
+    public void setTv_show(String flag){
+
+    }
+    public void initView(){
+
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        tv_simple = (TextView) findViewById(R.id.tv_simple);
+        tv_scientific = (TextView) findViewById(R.id.tv_sicentific);
+        tv_matrix = (TextView) findViewById(R.id.tv_matrix);
+        img_cursor = (ImageView) findViewById(R.id.img_cursor);
+
+        //下划线动画的相关设置：
+        bmpWidth = BitmapFactory.decodeResource(getResources(), R.drawable.m2).getWidth();// 获取图片宽度
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int screenW = dm.widthPixels;// 获取分辨率宽度
+        offset = (screenW / 3 - bmpWidth) / 2;// 计算偏移量
+        Matrix matrix = new Matrix();
+        matrix.postTranslate(offset, 0);
+        img_cursor.setImageMatrix(matrix);// 设置动画初始位置
+        //移动的距离
+        one = offset * 2 + bmpWidth;// 移动一页的偏移量,比如1->2,或者2->3
+        two = one * 2;// 移动两页的偏移量,比如1直接跳3
+        //查找布局文件用LayoutInflater.inflate
+        LayoutInflater inflater =getLayoutInflater();
+        view1 = inflater.inflate(R.layout.simple, null);
+        view2 = inflater.inflate(R.layout.scientific, null);
+        view3 = inflater.inflate(R.layout.matrix, null);
+        listViews = new ArrayList<View>();
+        //添加想要切换的界面
+        listViews.add(view1);
+        listViews.add(view2);
+        listViews.add(view3);
+        viewPager.setAdapter(new MyPagerAdapter(listViews));
+        viewPager.setCurrentItem(0);          //设置ViewPager当前页，从0开始算
+
+        tv_simple.setOnClickListener(this);
+        tv_scientific.setOnClickListener(this);
+        tv_matrix.setOnClickListener(this);
+
+        viewPager.addOnPageChangeListener(this);
+
+
+
+
+
+
+
 
         sb_show = new StringBuilder();
         sb_result = new StringBuilder();
@@ -103,7 +327,6 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
         tv_clear = (TextView) view1.findViewById(R.id.tv_clear);
         tv_show = (TextView) view1.findViewById(R.id.tv_show);
         tv_hitory = (TextView) view1.findViewById(R.id.tv_history);
-
 
 
         sb_show_pro = new StringBuilder();
@@ -166,7 +389,7 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
 
 
 
-       tv_1_pro.setOnClickListener(this);tv_2_pro.setOnClickListener(this);tv_3_pro.setOnClickListener(this);tv_4_pro.setOnClickListener(this);
+        tv_1_pro.setOnClickListener(this);tv_2_pro.setOnClickListener(this);tv_3_pro.setOnClickListener(this);tv_4_pro.setOnClickListener(this);
         tv_5_pro.setOnClickListener(this);tv_6_pro.setOnClickListener(this);tv_7_pro.setOnClickListener(this);tv_8_pro.setOnClickListener(this);
         tv_9_pro.setOnClickListener(this);tv_0_pro.setOnClickListener(this);tv_add_pro.setOnClickListener(this);
         tv_show_pro.setOnClickListener(this); tv_point_pro.setOnClickListener(this);tv_sub_pro.setOnClickListener(this);
@@ -178,67 +401,10 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
         tv_ln.setOnClickListener(this);tv_lg.setOnClickListener(this);tv_sqrt.setOnClickListener(this);
         tv_pow.setOnClickListener(this);tv_ping.setOnClickListener(this);
 
-    }
-
-    @Override
-    public void onPageSelected(int index) {
-        Animation animation = null;
-        switch (index) {
-            case 0:
-                if (currIndex == 1) {
-                    animation = new TranslateAnimation(one, 0, 0, 0);
-                } else if (currIndex == 2) {
-                    animation = new TranslateAnimation(two, 0, 0, 0);
-                }
-                break;
-            case 1:
-                if (currIndex == 0) {
-                    animation = new TranslateAnimation(offset, one, 0, 0);
-                } else if (currIndex == 2) {
-                    animation = new TranslateAnimation(two, one, 0, 0);
-                }
-                break;
-            case 2:
-                if (currIndex == 0) {
-                    animation = new TranslateAnimation(offset, two, 0, 0);
-                } else if (currIndex == 1) {
-                    animation = new TranslateAnimation(one, two, 0, 0);
-                }
-                break;
-        }
-        currIndex = index;
-        animation.setFillAfter(true);// true表示图片停在动画结束位置
-        animation.setDuration(300); //设置动画时间为300毫秒
-        img_cursor.startAnimation(animation);//开始动画
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int i) {
 
     }
-
-    @Override
-    public void onPageScrolled(int i, float v, int i1) {
-
-    }
-
-
-    @Override
-    public void onClick(View view){
-
-        switch (view.getId()){
-            case R.id.tv_simple:
-                viewPager.setCurrentItem(0);
-                break;
-            case R.id.tv_sicentific:
-                viewPager.setCurrentItem(1);
-                break;
-            case R.id.tv_matrix:
-                viewPager.setCurrentItem(2);
-                break;
-
-
-
+    public void computeSimple(int id){
+        switch (id){
 
             case R.id.tv_zero:
                 //是否进行过计算，然后初始化
@@ -328,7 +494,7 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                 flag_result = 0; setShowSize(sb_show);
                 break;
             case R.id.tv_mult:
-               ifNullAddZero();
+                ifNullAddZero();
                 MyJeval.getOperator(sb_result,"*",all_op[index]);
                 MyJeval.getOperator(sb_show,"×",all_op[index]);tv_show.setText(sb_show);
                 flag = "*";
@@ -352,7 +518,7 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
 
             case R.id.tv_clear:
                 clear();
-                 setShowSize(sb_show);
+                setShowSize(sb_show);
                 break;
             case R.id.tv_backspace:
 
@@ -425,12 +591,10 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                 //Toast.makeText(Test.this,simple_history_str, Toast.LENGTH_LONG).show();
 
 
-
-
-/**
- *              科学计算
- * *********************************************************************
- */
+        }
+    }
+    public void computeScientific(int id){
+        switch (id){
 
             case R.id.tv_zero_pro:
                 if (flag_result_pro == 1) { clear_pro(); }
@@ -554,10 +718,10 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                 break;
 
             case R.id.tv_clear_pro:
-               clear_pro();setShowSize_pro(sb_show_pro);
+                clear_pro();setShowSize_pro(sb_show_pro);
                 break;
 
-                //TODO  有缺陷---试着把flag变成数组
+            //TODO  有缺陷---试着把flag变成数组
             case R.id.tv_backspace_pro:
                 if (sb_show_pro.length() != 0 && sb_result_pro.length() != 0) {
 
@@ -643,7 +807,7 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
 
             case R.id.tv_e:
                 if (flag_result_pro == 1) {
-                   clear_pro();
+                    clear_pro();
                 }
                 flag_pro = "num";
                 tv_show_pro.setText(sb_show_pro.append("e"));
@@ -657,7 +821,7 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                 break;
             case R.id.tv_tan:
                 if (flag_result_pro == 1) {
-                   clear_pro();
+                    clear_pro();
                 }
                 flag_pro = "(";
                 tv_show_pro.setText(sb_show_pro.append("tan("));
@@ -666,7 +830,7 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                 break;
             case R.id.tv_sin:
                 if (flag_result_pro == 1) {
-                   clear_pro();
+                    clear_pro();
                 }
                 flag_pro = "(";
                 tv_show_pro.setText(sb_show_pro.append("sin("));
@@ -675,7 +839,7 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                 break;
             case R.id.tv_cos:
                 if (flag_result_pro == 1) {
-                   clear_pro();
+                    clear_pro();
                 }
                 flag_pro = "(";
                 tv_show_pro.setText(sb_show_pro.append("cos("));
@@ -701,7 +865,7 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                 sb_result_pro.append("sqrt(");
                 flag_kuo_left_pro++;setShowSize_pro(sb_show_pro);
                 break;
-                //TODO
+            //TODO
             case R.id.tv_pow:
                 flag_result_pro = 0;
                 MyJeval.pow2(sb_result_pro,operator,flag_pro,flag_kuo_left_pro,flag_kuo_right_pro);
@@ -721,119 +885,5 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                 break;
 
         }
-    }
-    public void clear(){
-        sb_show = new StringBuilder();
-        sb_result = new StringBuilder();
-        flag_kuo_left = 0;
-        flag_kuo_right = 0;
-        flag_result = 0;
-        flag = "";
-        all_op = new String[100];
-        index = -1;
-        tv_show.setText("");
-    }
-    public void ifNullAddZero(){
-        if(index == -1){
-            tv_show.setText("");
-            index++; all_op[index] = "num";
-            sb_result.append("0");
-            sb_show.append("0");
-        }
-    }
-    //如果结果是整数则取整
-    public String resultToInt(String num){
-
-
-        double number2 = Double.parseDouble(num);//類型轉換
-        if(Math.round(number2)-number2 == 0){
-            return String.valueOf((long)number2);
-        }
-        return String.valueOf(number2);
-    }
-    //动态显示结果
-    public void setShowSize(StringBuilder show) {
-        if (show.length()<9) {
-            tv_show.setTextSize(80);
-        }else if(show.length()<11){
-            tv_show.setTextSize(60);
-        }else if(show.length()<16){
-            tv_show.setTextSize(40);
-        }else {
-            tv_show.setTextSize(30);
-        }
-    }
-    public void setShowSize_pro(StringBuilder show) {
-        if (show.length()<9) {
-            tv_show_pro.setTextSize(80);
-        }else if(show.length()<11){
-            tv_show_pro.setTextSize(60);
-        }else if(show.length()<16){
-            tv_show_pro.setTextSize(40);
-        }else {
-            tv_show_pro.setTextSize(30);
-        }
-    }
-    public void clear_pro(){
-        tv_show_pro.setText("");
-        sb_show_pro = new StringBuilder();
-        sb_result_pro = new StringBuilder();
-        flag_kuo_left_pro = 0;
-        flag_kuo_right_pro = 0;
-        flag_result_pro = 0;
-        flag_pro = "";operator = "";
-    }
-    public void ifNullAddZero_pro(){
-        if(index_flag == -1){
-            index_flag++; all_flag_pro[index_flag] = "num";
-            sb_result_pro.append("0");
-            sb_show_pro.append("0");
-        }
-    }
-
-    public void setTv_show(String flag){
-
-    }
-
-    public void initView(){
-
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        tv_simple = (TextView) findViewById(R.id.tv_simple);
-        tv_scientific = (TextView) findViewById(R.id.tv_sicentific);
-        tv_matrix = (TextView) findViewById(R.id.tv_matrix);
-        img_cursor = (ImageView) findViewById(R.id.img_cursor);
-
-        //下划线动画的相关设置：
-        bmpWidth = BitmapFactory.decodeResource(getResources(), R.drawable.m2).getWidth();// 获取图片宽度
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int screenW = dm.widthPixels;// 获取分辨率宽度
-        offset = (screenW / 3 - bmpWidth) / 2;// 计算偏移量
-        Matrix matrix = new Matrix();
-        matrix.postTranslate(offset, 0);
-        img_cursor.setImageMatrix(matrix);// 设置动画初始位置
-        //移动的距离
-        one = offset * 2 + bmpWidth;// 移动一页的偏移量,比如1->2,或者2->3
-        two = one * 2;// 移动两页的偏移量,比如1直接跳3
-        //查找布局文件用LayoutInflater.inflate
-        LayoutInflater inflater =getLayoutInflater();
-        view1 = inflater.inflate(R.layout.simple, null);
-        view2 = inflater.inflate(R.layout.scientific, null);
-        view3 = inflater.inflate(R.layout.matrix, null);
-        listViews = new ArrayList<View>();
-        //添加想要切换的界面
-        listViews.add(view1);
-        listViews.add(view2);
-        listViews.add(view3);
-        viewPager.setAdapter(new MyPagerAdapter(listViews));
-        viewPager.setCurrentItem(0);          //设置ViewPager当前页，从0开始算
-
-        tv_simple.setOnClickListener(this);
-        tv_scientific.setOnClickListener(this);
-        tv_matrix.setOnClickListener(this);
-
-        viewPager.addOnPageChangeListener(this);
-
-
     }
 }
