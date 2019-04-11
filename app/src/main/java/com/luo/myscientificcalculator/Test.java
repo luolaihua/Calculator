@@ -213,6 +213,64 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                 et_inputA.setText("");
                 et_inputB.setText("");
                 tv_result.setText("0  0\n0  0");break;
+
+
+
+            case R.id.main_analysisA:
+                Vibrate();
+                    //把数据都放入data_a，b中,五行五列,此时还有好多0呢！！！需要处理！
+                    for (int i = 0; i < 5; i++) {
+                        for (int j = 0; j < 5; j++) {
+                            et_a = (EditText) findViewById((int)id_a[i][j]);
+                            data_a[i][j] = Double.parseDouble(et_a.getText().toString());
+                        }
+                    }
+                    try {
+                        //先处理数据ProData，切割数据
+                        m = MyJama.ProData(data_a,num_row_a,num_column_a);
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Toast.makeText(Test.this,"输入错误！1", Toast.LENGTH_SHORT).show();
+                    }
+
+                    try{
+                        Analysis(m);
+                        break;
+                    }catch (Exception e) {
+                        Toast.makeText(Test.this,"输入有误...2",Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+
+
+
+            case R.id.main_analysisB:
+                Vibrate();
+
+                    //把数据都放入data_a，b中,五行五列,此时还有好多0呢！！！需要处理！
+                    for (int i = 0; i < 5; i++) {
+                        for (int j = 0; j < 5; j++) {
+                            et_b = (EditText) findViewById((int)id_b[i][j]);
+                            data_b[i][j] = Double.parseDouble(et_b.getText().toString());
+                        }
+                    }
+                    try {
+                        //先处理数据ProData，切割数据
+                        n = MyJama.ProData(data_b,num_row_b,num_column_b);
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Toast.makeText(Test.this,"输入错误！1", Toast.LENGTH_SHORT).show();
+                    }
+
+                    try{
+                        Analysis(n);
+                        break;
+                    }catch (Exception e) {
+                        Toast.makeText(Test.this,"输入有误...2",Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+
         }
     }
 
@@ -227,6 +285,9 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
         Animation animation = null;
         switch (index) {
             case 0:
+                tv_simple.setTextColor(Color.parseColor("#86C0EE"));
+                tv_scientific.setTextColor(Color.parseColor("#000000"));
+                tv_matrix.setTextColor(Color.parseColor("#000000"));
                 if (currIndex == 1) {
                     animation = new TranslateAnimation(one, 0, 0, 0);
                 } else if (currIndex == 2) {
@@ -234,6 +295,9 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                 }
                 break;
             case 1:
+                tv_scientific.setTextColor(Color.parseColor("#86C0EE"));
+                tv_simple.setTextColor(Color.parseColor("#000000"));
+                tv_matrix.setTextColor(Color.parseColor("#000000"));
                 if (currIndex == 0) {
                     animation = new TranslateAnimation(offset, one, 0, 0);
                 } else if (currIndex == 2) {
@@ -241,6 +305,9 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                 }
                 break;
             case 2:
+                tv_scientific.setTextColor(Color.parseColor("#000000"));
+                tv_simple.setTextColor(Color.parseColor("#000000"));
+                tv_matrix.setTextColor(Color.parseColor("#86C0EE"));
                 if (currIndex == 0) {
                     animation = new TranslateAnimation(offset, two, 0, 0);
                 } else if (currIndex == 1) {
@@ -250,7 +317,7 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
         }
         currIndex = index;
         animation.setFillAfter(true);// true表示图片停在动画结束位置
-        animation.setDuration(300); //设置动画时间为300毫秒
+        animation.setDuration(30); //设置动画时间为300毫秒
         img_cursor.startAnimation(animation);//开始动画
     }
     @Override
@@ -363,7 +430,7 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
         listViews.add(view3);
         viewPager.setAdapter(new MyPagerAdapter(listViews));
         viewPager.setCurrentItem(0);          //设置ViewPager当前页，从0开始算
-
+        tv_simple.setTextColor(Color.parseColor("#86C0EE"));
         tv_simple.setOnClickListener(this);
         tv_scientific.setOnClickListener(this);
         tv_matrix.setOnClickListener(this);
@@ -1236,23 +1303,7 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                     Toast.makeText(Test.this,"还没有点运算符号呢！", Toast.LENGTH_SHORT).show();
                 }else {
 
-                    if(which_mode){
-                        input_a = et_inputA.getText().toString();
-                        input_b = et_inputB.getText().toString();
 
-                        try {
-                            double[] a = MyJama.StrToNum(input_a);
-                            double[] b = MyJama.StrToNum(input_b);
-                            double[][] aa = MyJama.OneToTwo(a, num_row_a, num_column_a);
-                            double[][] bb = MyJama.OneToTwo(b, num_row_b, num_column_b);
-                            result_ma = MyJama.getResult(aa, bb, flag_ma);
-                            tv_result.setText(MyJama.output(result_ma,num).toString());
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            Toast.makeText(Test.this,"输入错误！", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }else {
                         //把数据都放入data_a，b中,五行五列,此时还有好多0呢！！！需要处理！
                         // EditText et_a ,et_b;
                         for (int i = 0; i < 5; i++) {
@@ -1275,15 +1326,7 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                             Toast.makeText(Test.this,"输入错误！", Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
-
-
-
                 }
-
-
-            }
         });
 
     }
@@ -1459,4 +1502,38 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
         }
 
     }
+
+    //矩阵分析
+    public void Analysis(double [][] m){
+
+        Intent intent = new Intent(Test.this, Analysis.class);
+
+        rank = MyJama.matrixRank(m);
+        det = MyJama.matrixDet(m);
+        transpose = MyJama.matrixTranspose(m);
+        eigD = MyJama.matrixEigD(m);
+        eigV = MyJama.matrixEigV(m);
+
+        //二维变一维
+        double[] tranOne = MyJama.TwotoOne(transpose);
+        double[] eigDOne = MyJama.TwotoOne(eigD);
+        double[] eigVOne = MyJama.TwotoOne(eigV);
+
+
+        intent.putExtra("rank",rank);
+        intent.putExtra("det", det);
+        intent.putExtra("transpose", tranOne);
+        intent.putExtra("eigD", eigDOne);
+        intent.putExtra("eigV", eigVOne);
+
+        if(det != 0){
+            inverse = MyJama.matrixInverse(m);
+            double[] inverseOne = MyJama.TwotoOne(inverse);
+            intent.putExtra("inverse", inverseOne);
+        }
+
+        startActivity(intent);
+    }
+
+
 }

@@ -10,6 +10,7 @@
         android:layout_height="48dp">
 
         <TextView
+            android:textColor="#000000"
             android:background="@layout/selector"
             android:id="@+id/tv_simple"
             android:layout_width="fill_parent"
@@ -19,6 +20,7 @@
             android:text="简单" />
 
         <TextView
+            android:textColor="#000000"
             android:background="@layout/selector"
             android:id="@+id/tv_sicentific"
             android:layout_width="fill_parent"
@@ -28,6 +30,7 @@
             android:text="科学" />
 
         <TextView
+            android:textColor="#000000"
             android:background="@layout/selector"
             android:id="@+id/tv_matrix"
             android:layout_width="fill_parent"

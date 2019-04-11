@@ -42,13 +42,14 @@
                 android:layout_height="match_parent" />
 
             <TextView
+                android:background="@layout/selector"
                 android:id="@+id/tv_backspace"
-                android:textSize="30dp"
-                android:text="←"
-                android:gravity="center"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:layout_height="match_parent" />
+                android:gravity="center"
+                android:text="←"
+                android:textSize="30dp" />
             <TextView
                 android:background="@layout/selector"
                 android:id="@+id/tv_quo_left"
