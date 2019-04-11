@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -14,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,7 +30,7 @@ import net.sourceforge.jeval.Evaluator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Test extends Activity implements View.OnClickListener,ViewPager.OnPageChangeListener{
+public class Test extends Activity implements View.OnClickListener,ViewPager.OnPageChangeListener, View.OnLongClickListener {
 
     private SharedPreferences.Editor editor;
     private ViewPager viewPager;
@@ -78,7 +81,9 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
     private static int index_op = -1;
     private static int index_flag = -1;
 
-
+    /**
+     * *******************************************    矩阵
+     */
     //下拉栏
     private Spinner spinner_row_a, spinner_column_a,spinner_row_b, spinner_column_b;
 
@@ -111,6 +116,24 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
     private DrawerLayout drawerLayout;
 
 
+    //获取小数点保留位数，以及是否触摸反馈
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences preferences = getSharedPreferences("data_num", MODE_PRIVATE);
+        num = preferences.getInt("num",2);
+        which_mode = preferences.getBoolean("isChecked", false);
+        isVibrate = preferences.getBoolean("isVibrate", false);
+
+
+        //判断是哪种模式,并显示
+        //which_mode == true ? View.GONE :View.VISIBLE
+        linear_a.setVisibility(which_mode == true ? View.GONE : View.VISIBLE);
+        linear_b.setVisibility(which_mode == true ? View.GONE : View.VISIBLE);
+        et_inputA.setVisibility(which_mode == true ? View.VISIBLE : View.GONE);
+        et_inputB.setVisibility(which_mode == true ? View.VISIBLE : View.GONE);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +141,7 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
         setContentView(R.layout.activity_test);
          //初始化
         initView();
+        computeMatrix();
 
 
     }
@@ -139,6 +163,56 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                 viewPager.setCurrentItem(2);
                 break;
 
+
+            case R.id.main_A:
+                Vibrate();Unit(et_a,id_a);
+                break;
+            case R.id.main_B:
+                Vibrate();Unit(et_b,id_b);
+                break;
+
+            case R.id.main_tv_add:
+                Vibrate();
+                flag_ma = 1;
+                ChangeOperatorColor(flag_ma,tv_add_ma,tv_sub_ma,tv_mult_ma,tv_sovle,tv_sovleTran);break;
+            case R.id.main_tv_sub:
+                Vibrate();
+                flag_ma = 2;
+                ChangeOperatorColor(flag_ma,tv_add_ma,tv_sub_ma,tv_mult_ma,tv_sovle,tv_sovleTran);break;
+            case R.id.main_tv_mult:
+                Vibrate();
+                flag_ma = 3;
+                ChangeOperatorColor(flag_ma,tv_add_ma,tv_sub_ma,tv_mult_ma,tv_sovle,tv_sovleTran);break;
+            case R.id.main_sovle:
+                Vibrate();
+                flag_ma = 4;
+                ChangeOperatorColor(flag_ma,tv_add_ma,tv_sub_ma,tv_mult_ma,tv_sovle,tv_sovleTran);break;
+            case R.id.main_sovleTran:
+                Vibrate();
+                flag_ma = 5;
+                ChangeOperatorColor(flag_ma,tv_add_ma,tv_sub_ma,tv_mult_ma,tv_sovle,tv_sovleTran);break;
+
+            case R.id.main_clearAll:
+                Vibrate();
+                flag_ma = 0;
+                ChangeOperatorColor(flag_ma,tv_add_ma,tv_sub_ma,tv_mult_ma,tv_sovle,tv_sovleTran);
+
+                spinner_column_a.setSelection(0);
+                spinner_column_b.setSelection(0);
+                spinner_row_a.setSelection(0);
+                spinner_row_b.setSelection(0);
+
+                for (int i = 0; i < 5; i++) {
+                    for (int j = 0; j < 5; j++) {
+                        et_a = (EditText) findViewById((int)id_a[i][j]);
+                        et_b = (EditText) findViewById((int)id_b[i][j]);
+                        et_a.setText("0");
+                        et_b.setText("0");
+                    }
+                }
+                et_inputA.setText("");
+                et_inputB.setText("");
+                tv_result.setText("0  0\n0  0");break;
         }
     }
 
@@ -400,6 +474,266 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
         tv_sin.setOnClickListener(this);tv_cos.setOnClickListener(this);tv_tan.setOnClickListener(this);
         tv_ln.setOnClickListener(this);tv_lg.setOnClickListener(this);tv_sqrt.setOnClickListener(this);
         tv_pow.setOnClickListener(this);tv_ping.setOnClickListener(this);
+
+
+
+
+        SharedPreferences preferences = getSharedPreferences("data_num", MODE_PRIVATE);
+        num = preferences.getInt("num",2);
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+
+        //把输入框的地址全放入数组中
+        id_a[0][0] = R.id.a_00;
+        id_a[0][1] = R.id.a_01;
+        id_a[0][2] = R.id.a_02;
+        id_a[0][3] = R.id.a_03;
+        id_a[0][4] = R.id.a_04;
+        id_a[1][0] = R.id.a_10;
+        id_a[1][1] = R.id.a_11;
+        id_a[1][2] = R.id.a_12;
+        id_a[1][3] = R.id.a_13;
+        id_a[1][4] = R.id.a_14;
+        id_a[2][0] = R.id.a_20;
+        id_a[2][1] = R.id.a_21;
+        id_a[2][2] = R.id.a_22;
+        id_a[2][3] = R.id.a_23;
+        id_a[2][4] = R.id.a_24;
+        id_a[3][0] = R.id.a_30;
+        id_a[3][1] = R.id.a_31;
+        id_a[3][2] = R.id.a_32;
+        id_a[3][3] = R.id.a_33;
+        id_a[3][4] = R.id.a_34;
+        id_a[4][0] = R.id.a_40;
+        id_a[4][1] = R.id.a_41;
+        id_a[4][2] = R.id.a_42;
+        id_a[4][3] = R.id.a_43;
+        id_a[4][4] = R.id.a_44;
+
+
+
+        id_b[0][0] = R.id.b_00;
+        id_b[0][1] = R.id.b_01;
+        id_b[0][2] = R.id.b_02;
+        id_b[0][3] = R.id.b_03;
+        id_b[0][4] = R.id.b_04;
+        id_b[1][0] = R.id.b_10;
+        id_b[1][1] = R.id.b_11;
+        id_b[1][2] = R.id.b_12;
+        id_b[1][3] = R.id.b_13;
+        id_b[1][4] = R.id.b_14;
+        id_b[2][0] = R.id.b_20;
+        id_b[2][1] = R.id.b_21;
+        id_b[2][2] = R.id.b_22;
+        id_b[2][3] = R.id.b_23;
+        id_b[2][4] = R.id.b_24;
+        id_b[3][0] = R.id.b_30;
+        id_b[3][1] = R.id.b_31;
+        id_b[3][2] = R.id.b_32;
+        id_b[3][3] = R.id.b_33;
+        id_b[3][4] = R.id.b_34;
+        id_b[4][0] = R.id.b_40;
+        id_b[4][1] = R.id.b_41;
+        id_b[4][2] = R.id.b_42;
+        id_b[4][3] = R.id.b_43;
+        id_b[4][4] = R.id.b_44;
+
+        linear_a1 = (LinearLayout) view3.findViewById(R.id.linear_a_1);
+        linear_a2 = (LinearLayout) view3.findViewById(R.id.linear_a_2);
+        linear_a3 = (LinearLayout) view3.findViewById(R.id.linear_a_3);
+        linear_a4 = (LinearLayout) view3.findViewById(R.id.linear_a_4);
+        linear_a5 = (LinearLayout) view3.findViewById(R.id.linear_a_5);
+
+        linear_b1 = (LinearLayout) view3.findViewById(R.id.linear_b_1);
+        linear_b2 = (LinearLayout) view3.findViewById(R.id.linear_b_2);
+        linear_b3 = (LinearLayout) view3.findViewById(R.id.linear_b_3);
+        linear_b4 = (LinearLayout) view3.findViewById(R.id.linear_b_4);
+        linear_b5 = (LinearLayout) view3.findViewById(R.id.linear_b_5);
+
+
+        linear_a = (LinearLayout) view3.findViewById(R.id.linear_a);
+        linear_b = (LinearLayout) view3.findViewById(R.id.linear_b);
+
+        et_inputA = (EditText) view3.findViewById(R.id.input_a);
+        et_inputB = (EditText) view3.findViewById(R.id.input_b);
+
+
+
+        tv_result = (TextView) view3.findViewById(R.id.main_tv_result);
+        tv_add_ma =(TextView) view3.findViewById(R.id.main_tv_add);
+        tv_sub_ma = (TextView) view3.findViewById(R.id.main_tv_sub);
+        tv_mult_ma = (TextView) view3.findViewById(R.id.main_tv_mult);
+        tv_equal_ma = (TextView) view3.findViewById(R.id.main_tv_equal);
+        tv_sovle = (TextView) view3.findViewById(R.id.main_sovle);
+        tv_sovleTran = (TextView) view3.findViewById(R.id.main_sovleTran);
+        tv_clearAll = (TextView) view3.findViewById(R.id.main_clearAll);
+        tv_A = (TextView) view3.findViewById(R.id.main_A);
+        tv_B = (TextView) view3.findViewById(R.id.main_B);
+        tv_analysisA = (TextView) view3.findViewById(R.id.main_analysisA);
+        tv_analysisB = (TextView) view3.findViewById(R.id.main_analysisB);
+
+
+        tv_add_ma.setOnClickListener(this);
+        tv_sub_ma.setOnClickListener(this);
+        tv_mult_ma.setOnClickListener(this);
+        tv_sovle.setOnClickListener(this);
+        tv_sovleTran.setOnClickListener(this);
+        tv_clearAll.setOnClickListener(this);
+        tv_analysisA.setOnClickListener(this);
+        tv_analysisB.setOnClickListener(this);
+        tv_B.setOnClickListener(this);
+        tv_A.setOnClickListener(this);
+        tv_A.setOnLongClickListener(this);
+        tv_B.setOnLongClickListener(this);
+
+
+        //设置下拉栏属性
+        spinner_row_a = (Spinner) view3.findViewById(R.id.row_a);
+        spinner_column_a = (Spinner) view3.findViewById(R.id.column_a);
+        spinner_row_b = (Spinner) view3.findViewById(R.id.row_b);
+        spinner_column_b = (Spinner) view3.findViewById(R.id.column_b);
+        row_a.add("1行");
+        row_a.add("2行");
+        row_a.add("3行");
+        row_a.add("4行");
+        row_a.add("5行");
+        column_a.add("1列");
+        column_a.add("2列");
+        column_a.add("3列");
+        column_a.add("4列");
+        column_a.add("5列");
+        row_b.add("1行");
+        row_b.add("2行");
+        row_b.add("3行");
+        row_b.add("4行");
+        row_b.add("5行");
+        column_b.add("1列");
+        column_b.add("2列");
+        column_b.add("3列");
+        column_b.add("4列");
+        column_b.add("5列");
+
+        ArrayAdapter<String> adapter_row_a =
+                new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,row_a);
+        ArrayAdapter<String> adapter_column_a =
+                new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,column_a);
+
+        ArrayAdapter<String> adapter_row_b =
+                new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,row_b);
+        ArrayAdapter<String> adapter_column_b =
+                new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,column_b);
+
+
+        adapter_row_a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_row_a.setAdapter(adapter_row_a);
+        adapter_column_a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_column_a.setAdapter(adapter_column_a);
+
+        adapter_row_b.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_row_b.setAdapter(adapter_row_b);
+        adapter_column_b.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_column_b.setAdapter(adapter_column_b);
+
+
+        //下拉栏点击事件
+        spinner_row_a.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                num_row_a = position + 1;
+                Check_ChangeColor();
+
+//-----------------------------------------------------------------------------
+
+
+                //控件的出现与消失
+                //裁剪矩阵
+                int[][] m = MyJama.FindId(id_a,num_row_a,num_column_a);
+                EditText test;
+                InputShow_linearlayout(num_column_a,linear_a1,linear_a2,linear_a3,linear_a4,linear_a5);
+
+                //让控件全部GONE---初始化
+                Input_gone(id_a);
+                //让需要的控件VISIBLE
+                Input_visible(m);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        spinner_column_a.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                num_column_a = position + 1;
+                Check_ChangeColor();
+
+//-----------------------------------------------------------------------------
+
+                //控件的出现与消失
+
+                int[][] m = MyJama.FindId(id_a,num_row_a,num_column_a);
+                EditText test;
+                InputShow_linearlayout(num_column_a,linear_a1,linear_a2,linear_a3,linear_a4,linear_a5);
+
+                //让控件全部GONE---初始化
+                Input_gone(id_a);
+                //让需要的控件VISIBLE
+                Input_visible(m);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        spinner_row_b.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                num_row_b = position+1;
+
+//-----------------------------------------------------------------------------
+
+                //控件的出现与消失
+
+                int[][] m = MyJama.FindId(id_b,num_row_b,num_column_b);
+                EditText test;
+                InputShow_linearlayout(num_column_b,linear_b1,linear_b2,linear_b3,linear_b4,linear_b5);
+
+                //让控件全部GONE---初始化
+                Input_gone(id_b);
+                //让需要的控件VISIBLE
+                Input_visible(m);
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        spinner_column_b.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                num_column_b = position+1;
+                Check_ChangeColor();
+
+//-----------------------------------------------------------------------------
+
+                //控件的出现与消失
+                int[][] m = MyJama.FindId(id_b,num_row_b,num_column_b);
+                EditText test;
+                InputShow_linearlayout(num_column_b,linear_b1,linear_b2,linear_b3,linear_b4,linear_b5);
+
+                //让控件全部GONE---初始化
+                Input_gone(id_b);
+                //让需要的控件VISIBLE
+                Input_visible(m);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
 
 
     }
@@ -885,5 +1219,244 @@ public class Test extends Activity implements View.OnClickListener,ViewPager.OnP
                 break;
 
         }
+    }
+    public void computeMatrix(){
+
+/**
+ *  //得出结果
+ */
+        tv_equal_ma.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isVibrate){
+                    vibrator.vibrate(10);
+                }
+
+                if (flag_ma == 0) {
+                    Toast.makeText(Test.this,"还没有点运算符号呢！", Toast.LENGTH_SHORT).show();
+                }else {
+
+                    if(which_mode){
+                        input_a = et_inputA.getText().toString();
+                        input_b = et_inputB.getText().toString();
+
+                        try {
+                            double[] a = MyJama.StrToNum(input_a);
+                            double[] b = MyJama.StrToNum(input_b);
+                            double[][] aa = MyJama.OneToTwo(a, num_row_a, num_column_a);
+                            double[][] bb = MyJama.OneToTwo(b, num_row_b, num_column_b);
+                            result_ma = MyJama.getResult(aa, bb, flag_ma);
+                            tv_result.setText(MyJama.output(result_ma,num).toString());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Toast.makeText(Test.this,"输入错误！", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }else {
+                        //把数据都放入data_a，b中,五行五列,此时还有好多0呢！！！需要处理！
+                        // EditText et_a ,et_b;
+                        for (int i = 0; i < 5; i++) {
+                            for (int j = 0; j < 5; j++) {
+                                et_a = (EditText) findViewById((int)id_a[i][j]);
+                                et_b = (EditText) findViewById((int)id_b[i][j]);
+                                data_a[i][j] = Double.parseDouble(et_a.getText().toString());
+                                data_b[i][j] = Double.parseDouble(et_b.getText().toString());
+                            }
+                        }
+                        try {
+                            //先处理数据ProData，切割数据
+                            //计算结果；
+                            result_ma = MyJama.getResult(MyJama.ProData(data_a,num_row_a,num_column_a), MyJama.ProData(data_b,num_row_b,num_column_b), flag_ma);
+                            tv_result.setText(MyJama.output(result_ma,num).toString());
+
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Toast.makeText(Test.this,"输入错误！", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+
+
+
+                }
+
+
+            }
+        });
+
+    }
+    //生成单位矩阵
+    public void Unit(EditText et,double[][] id){
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (i == j) {
+                    et = (EditText) findViewById((int)id[i][j]);
+                    et.setText("1");
+                }
+            }
+        }
+    }
+    @Override
+    public boolean onLongClick(View v) {
+        return false;
+    }
+
+
+    //触摸反馈
+    public void Vibrate(){
+        if(isVibrate){
+            vibrator.vibrate(10);
+        }
+    }
+    //改变操作符颜色
+    public void ChangeOperatorColor(int f, TextView add, TextView sub, TextView mult, TextView sovle, TextView sovleTran){
+
+        switch (f){
+            case 0:
+                add.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sub.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                mult.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sovle.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sovleTran.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                break;
+            case 1:
+                add.setBackgroundColor(Color.parseColor("#86C0EE"));
+                sub.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                mult.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sovle.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sovleTran.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                break;
+            case 2:
+                add.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sub.setBackgroundColor(Color.parseColor("#86C0EE"));
+                mult.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sovle.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sovleTran.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                break;
+            case 3:
+                add.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sub.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                mult.setBackgroundColor(Color.parseColor("#86C0EE"));
+                sovle.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sovleTran.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                break;
+            case 4:
+                add.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sub.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                mult.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sovle.setBackgroundColor(Color.parseColor("#86C0EE"));
+                sovleTran.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                break;
+            case 5:
+                add.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sub.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                mult.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sovle.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+                sovleTran.setBackgroundColor(Color.parseColor("#86C0EE"));
+                break;
+        }
+
+    }
+    //屏蔽不可进行的操作
+    public void Check_ChangeColor(){
+        if (num_row_a != num_row_b || num_column_a != num_column_b) {
+            tv_add_ma.setBackgroundColor(Color.parseColor("#F3978F"));
+            tv_sub_ma.setBackgroundColor(Color.parseColor("#F3978F"));
+            tv_add_ma.setClickable(false);
+            tv_sub_ma.setClickable(false);
+        }else {
+            tv_add_ma.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+            tv_sub_ma.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+            tv_add_ma.setClickable(true);
+            tv_sub_ma.setClickable(true);
+        }
+        if (num_row_a != num_column_b || num_column_a != num_row_b ) {
+            tv_mult_ma.setBackgroundColor(Color.parseColor("#F3978F"));
+            tv_mult_ma.setClickable(false);
+        }else {
+            tv_mult_ma.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+            tv_mult_ma.setClickable(true);
+        }
+        //----------A*X=B----ac*cb=ab
+        if (num_row_a  != num_row_b  ) {
+            tv_sovle.setBackgroundColor(Color.parseColor("#F3978F"));
+            tv_sovle.setClickable(false);
+        }else {
+            tv_sovle.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+            tv_sovle.setClickable(true);
+        }
+        //----------X*A=B----ac*cb=ab
+        if (num_column_a  != num_column_b  ) {
+            tv_sovleTran.setBackgroundColor(Color.parseColor("#F3978F"));
+            tv_sovleTran.setClickable(false);
+        }else {
+            tv_sovleTran.setBackgroundColor(Color.parseColor("#6FE2EDF5"));
+            tv_sovleTran.setClickable(true);
+        }
+    }
+    //输入控件的出现与消失
+    public void InputShow_linearlayout(int num, LinearLayout l1, LinearLayout l2, LinearLayout l3, LinearLayout l4, LinearLayout l5){
+        switch (num){
+            case 1:
+                l1.setVisibility(View.VISIBLE);
+                l2.setVisibility(View.GONE);
+                l3.setVisibility(View.GONE);
+                l4.setVisibility(View.GONE);
+                l5.setVisibility(View.GONE);
+                break;
+            case 2:
+                l1.setVisibility(View.VISIBLE);
+                l2.setVisibility(View.VISIBLE);
+                l3.setVisibility(View.GONE);
+                l4.setVisibility(View.GONE);
+                l5.setVisibility(View.GONE);
+                break;
+            case 3:
+                l1.setVisibility(View.VISIBLE);
+                l2.setVisibility(View.VISIBLE);
+                l3.setVisibility(View.VISIBLE);
+                l4.setVisibility(View.GONE);
+                l5.setVisibility(View.GONE);
+                break;
+            case 4:
+                l1.setVisibility(View.VISIBLE);
+                l2.setVisibility(View.VISIBLE);
+                l3.setVisibility(View.VISIBLE);
+                l4.setVisibility(View.VISIBLE);
+                l5.setVisibility(View.GONE);
+                break;
+            case 5:
+                l1.setVisibility(View.VISIBLE);
+                l2.setVisibility(View.VISIBLE);
+                l3.setVisibility(View.VISIBLE);
+                l4.setVisibility(View.VISIBLE);
+                l5.setVisibility(View.VISIBLE);
+                break;
+
+
+        }
+    }
+    //初始化控件，使之全部消失
+    public void Input_gone(double[][] id){
+        EditText test;
+        for (int i = 0; i < id.length; i++) {
+            for (int j = 0; j < id[i].length; j++) {
+                test = (EditText) findViewById((int)id[i][j]);
+                test.setVisibility(View.GONE);
+            }
+        }
+    }
+    //显示需要的空间
+    public void Input_visible(int [][] id){
+        EditText test;
+        for (int i = 0; i < id.length; i++) {
+            for (int j = 0; j < id[i].length; j++) {
+                test = (EditText) findViewById(id[i][j]);
+                test.setVisibility(View.VISIBLE);
+            }
+        }
+
     }
 }
